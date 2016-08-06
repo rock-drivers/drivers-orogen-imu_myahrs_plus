@@ -5,7 +5,19 @@
 
 #include "imu_myahrs_plus/TaskBase.hpp"
 
-namespace imu_myahrs_plus{
+/** myAHRS+ library **/
+#include <imu_myahrs_plus/myahrs_plus.hpp>
+
+namespace imu_myahrs_plus
+{
+    /** WGS-84 ellipsoid constants (Nominal Gravity Model and Earth angular velocity) **/
+    static const int Re = 6378137; /** Equatorial radius in meters **/
+    static const int Rp = 6378137; /** Polar radius in meters **/
+    static const double ECC = 0.0818191908426; /** First eccentricity **/
+    static const double GRAVITY = 9.79766542; /** Mean value of gravity value in m/s^2 **/
+    static const double GWGS0 = 9.7803267714; /** Gravity value at the equator in m/s^2 **/
+    static const double GWGS1 = 0.00193185138639; /** Gravity formula constant **/
+    static const double EARTHW = 7.292115e-05; /** Earth angular velocity in rad/s **/
 
     /*! \class Task
      * \brief The task context provides and requires services. It uses an ExecutionEngine to perform its functions.
@@ -13,8 +25,8 @@ namespace imu_myahrs_plus{
      * In order to modify the interfaces you should (re)use oroGen and rely on the associated workflow.
      * Declare a new task context (i.e., a component)
 
-The corresponding C++ class can be edited in tasks/Task.hpp and
-tasks/Task.cpp, and will be put in the imu_myahrs_plus namespace.
+     * The corresponding C++ class can be edited in tasks/Task.hpp and
+     * tasks/Task.cpp, and will be put in the imu_myahrs_plus namespace.
      * \details
      * The name of a TaskContext is primarily defined via:
      \verbatim
@@ -29,7 +41,18 @@ tasks/Task.cpp, and will be put in the imu_myahrs_plus namespace.
 	friend class TaskBase;
     protected:
 
+        /**************************/
+        /*** Internal Variables ***/
+        /**************************/
 
+        WithRobot::MyAhrsPlus sensor;
+        WithRobot::SensorData sensor_data;
+
+        /***************************/
+        /** Output port variables **/
+        /***************************/
+
+        base::samples::RigidBodyState orientation_out; /** the output orientation **/
 
     public:
         /** TaskContext constructor for Task
