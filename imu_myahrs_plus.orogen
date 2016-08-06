@@ -1,0 +1,55 @@
+name "imu_myahrs_plus"
+# Optionally declare the version number
+# version "0.1"
+
+# If new data types need to be defined, they have to be put in a separate C++
+# header, and this header will be loaded here
+import_types_from "imu_myahrs_plusTypes.hpp"
+
+# If this project uses data types that are defined in other oroGen projects,
+# these projects should be imported there as well.
+import_types_from "base"
+
+# Declare a new task context (i.e., a component)
+#
+# The corresponding C++ class can be edited in tasks/Task.hpp and
+# tasks/Task.cpp, and will be put in the imu_myahrs_plus namespace.
+task_context "Task" do
+    # This is the default from now on, and should not be removed. Rock will
+    # transition to a setup where all components use a configuration step.
+    needs_configuration
+
+    #***************************
+    #**** Driver Properties ****
+    #***************************
+    property('port', '/std/string', "/dev/ttyACM0").
+        doc 'the device port'
+
+    property('baudrate', 'int', 115200).
+        doc 'Baud rate to open the serial com_port and debug_port.'
+
+    property('timeout', 'double', 0.008).
+        doc 'the expected time (in seconds) to have a whole package in the fd (the device port)'+
+        'by default 0.008 seconds which corresponds to 125Hz (it should be the sensor sampling frequency).'
+
+    #******************************
+    #******* Input ports  *********
+    #******************************
+
+    #******************************
+    #******* Output Ports *********
+    #******************************
+    output_port('inertial_sensors_out', '/base/samples/IMUSensors').
+        doc 'provides timestamped IMUReading samples containing the calibrated sensor readings.'+
+        'Calibrated values are temperature corrected as the device reports the values (linear acceleration and angular velocity).'
+
+    output_port('compensated_sensors_out', '/base/samples/IMUSensors').
+        doc 'provides timestamped IMUReading samples containing the calibrated and compensated sensor readings depending whether the attutide filter is running'+
+        'Compensated values are Earth gravity/rotation and bias compensated angular velocity and linear acceleration from the filter.'
+
+    output_port('orientation_samples_out', '/base/samples/RigidBodyState').
+        doc 'provides timestamped IMU orientation samples containing the quaternion.'
+
+    fd_driven
+end
+
