@@ -5,11 +5,23 @@
 
 #include "imu_myahrs_plus/TaskBase.hpp"
 
+/** Rock data types **/
+#include <base/Time.hpp>
+#include <base/samples/IMUSensors.hpp>
+#include <base/samples/RigidBodyState.hpp>
+
 /** myAHRS+ library **/
 #include <imu_myahrs_plus/myahrs_plus.hpp>
 
+#include <map>
+#include <string>
+
 namespace imu_myahrs_plus
 {
+
+    /** MYAHRS+ constant values **/
+    static const int MYAHRS_PLUS_MAX_RATE = 100; /** Maximum sampling rate in Hz **/
+
     /** WGS-84 ellipsoid constants (Nominal Gravity Model and Earth angular velocity) **/
     static const int Re = 6378137; /** Equatorial radius in meters **/
     static const int Rp = 6378137; /** Polar radius in meters **/
@@ -44,6 +56,7 @@ namespace imu_myahrs_plus
         /**************************/
         /*** Internal Variables ***/
         /**************************/
+        base::Time prev_ts;
 
         WithRobot::MyAhrsPlus sensor;
         WithRobot::SensorData sensor_data;
@@ -51,8 +64,8 @@ namespace imu_myahrs_plus
         /***************************/
         /** Output port variables **/
         /***************************/
-
         base::samples::RigidBodyState orientation_out; /** the output orientation **/
+
 
     public:
         /** TaskContext constructor for Task
