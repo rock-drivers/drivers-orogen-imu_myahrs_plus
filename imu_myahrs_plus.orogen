@@ -28,6 +28,12 @@ task_context "Task" do
     property('baudrate', 'int', 115200).
         doc 'Baud rate to open the serial com_port and debug_port.'
 
+    property('source_frame', '/std/string').
+        doc 'the name of the frame attached to the IMU'
+
+    property('target_frame', '/std/string').
+        doc 'the name of the world frame'
+
     #******************************
     #******* Input ports  *********
     #******************************
