@@ -85,6 +85,10 @@ bool Task::configureHook()
         return false;
     }
 
+    /** Frame names for the output port transformation **/
+    this->orientation_out.sourceFrame = _source_frame.value();
+    this->orientation_out.targetFrame = _target_frame.value();
+
    // std::vector<std::string> attributes = sensor.get_attribute_list();
    // for(std::vector<std::string>::iterator it=attributes.begin(); it!=attributes.end(); it++)
    // {
