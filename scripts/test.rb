@@ -11,6 +11,8 @@ ENV['PKG_CONFIG_PATH'] = "#{File.expand_path("..", File.dirname(__FILE__))}/buil
 
 Orocos.initialize
 
+Vizkit.vizkit3d_widget.setCameraManipulator("Trackball")
+
 Orocos::Process.run 'imu_myahrs_plus::Task' => 'imu_myahrs_plus' do
     # log all the output ports
     Orocos.log_all_ports 
