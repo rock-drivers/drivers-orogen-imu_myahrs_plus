@@ -155,10 +155,9 @@ void Task::updateHook()
         _inertial_sensors_out.write(imusamples);
 
         /** Convert to Rock RBS **/
+	/** Have a look at the IMU documentation to see the frame location **/
         orientation_out.time = recvts;
-        // The negative sign in Y and Z are needed to convert North-West-Down to
-        //North-East-Up
-        orientation_out.orientation = base::Orientation(q.w, q.x, -q.y, -q.z);
+        orientation_out.orientation = base::Orientation(q.w, q.x, q.y, q.z);
         orientation_out.orientation.normalize();
         _orientation_samples_out.write(orientation_out);
     }
